@@ -14,6 +14,6 @@
 ### Przydatne
 > Pobieranie elementu ze struktury DOM:
 > ```document.querySelector(selektor)```
-> ``` document.querySelectorAll(selektor) ```  
+> ```document.querySelectorAll(selektor) ```  
 > Nasłuchiwanie na zdarzenia:
 > ```document.addEventListener(nazwaZdarzenia, callback)```

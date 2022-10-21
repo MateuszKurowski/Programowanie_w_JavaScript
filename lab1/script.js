@@ -51,11 +51,13 @@ const addField = () => {
 	newDiv.append(newField)
 	newDiv.append(newSpan)
 	reloadFields()
+	calculate()
 }
 
 const removeField = e => {
 	e.target.parentElement.remove()
 	reloadFields()
+	calculate()
 }
 
 const reloadFields = () => {

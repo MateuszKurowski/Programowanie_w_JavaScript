@@ -11,7 +11,6 @@ const max = document.querySelector('#max')
 
 const calculate = () => {
 	let sumValue = null
-	const valuesArray = []
 	for (const value of values) {
 		sumValue += parseInt(value.value)
 	}

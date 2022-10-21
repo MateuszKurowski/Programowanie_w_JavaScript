@@ -10,20 +10,31 @@
 </head>
 
 <body>
-    <form>
-        <input type="number" class="form" /></br></br>
-        <input type="number" class="form" /></br></br>
-        <input type="number" class="form" /></br></br>
-        <input type="number" class="form" /></br></br>
-    </form>
+    <div id="containter">
+        <div class="formTable">
+            <span class="addField">➕</span>
 
-    <button>Przelicz</button>
-    </br></br>
-    <div><span class="results">Suma: </span><span id="sum"></span></div>
-    <div><span class="results">Średnia: </span><span id="avg"></span></div>
-    <div><span class="results">Min: </span><span id="min"></span></div>
-    <div><span class="results">Max: </span><span id="max"></span></div>
+            <form id="formNumbers">
+                <div class="formDiv">
+                    <input type="number" class="form" /><span class="deleteField">➖</span>
+                </div>
+                <div class="formDiv">
+                    <input type="number" class="form" /><span class="deleteField">➖</span>
+                </div>
+                <div class="formDiv">
+                    <input type="number" class="form" /><span class="deleteField">➖</span>
+                </div>
+            </form>
+        </div>
 
+        <div class="resultsTable">
+            <button class='calculate'>Przelicz</button>
+            <div><span class="results">Suma: </span><span id="sum"></span></div>
+            <div><span class="results">Średnia: </span><span id="avg"></span></div>
+            <div><span class="results">Min: </span><span id="min"></span></div>
+            <div><span class="results">Max: </span><span id="max"></span></div>
+        </div>
+    </div>
     <script src="./script.js"></script>
 </body>
 

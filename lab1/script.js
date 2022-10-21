@@ -1,14 +1,20 @@
 // Wersja shame
-const btn = document.querySelector('button')
+let form = document.getElementById('formNumbers')
+let values = document.getElementsByClassName('form')
+let removeFieldsButtons = document.getElementsByClassName('deleteField')
+const calculateButton = document.querySelector('.calculate')
+const addFieldsButtons = document.querySelector('.addField')
 const sum = document.querySelector('#sum')
 const avg = document.querySelector('#avg')
 const min = document.querySelector('#min')
 const max = document.querySelector('#max')
-const values = document.querySelectorAll('.form')
 
 const calculate = () => {
 	let sumValue = null
-	values.forEach(el => (sumValue += parseInt(el.value)))
+	const valuesArray = []
+	for (const value of values) {
+		sumValue += parseInt(value.value)
+	}
 	if (!sumValue && sumValue !== 0) {
 		sum.textContent = ''
 		avg.textContent = ''
@@ -18,7 +24,7 @@ const calculate = () => {
 	}
 	sum.textContent = sumValue
 
-	avg.textContent = sumValue / values.length
+	avg.textContent = (sumValue / values.length).toFixed(2)
 
 	const array = []
 	for (const value of values) {
@@ -28,8 +34,53 @@ const calculate = () => {
 	max.textContent = Math.max(...array)
 }
 
-btn.addEventListener('click', calculate)
+const addField = () => {
+	console.log('test')
+	const newDiv = document.createElement('div')
+	newDiv.classList.add('formDiv')
+
+	const newField = document.createElement('input')
+	newField.type = 'number'
+	newField.classList.add('form')
+
+	const newSpan = document.createElement('span')
+	newSpan.classList.add('deleteField')
+	newSpan.textContent = '➖'
+
+	form.append(newDiv)
+	newDiv.append(newField)
+	newDiv.append(newSpan)
+	reloadFields()
+}
+
+const removeField = e => {
+	e.target.parentElement.remove()
+	reloadFields()
+}
+
+const reloadFields = () => {
+	listenAddButtons()
+	listenRemoveButtons()
+}
+
+const listenAddButtons = () => {
+	for (const button of values) {
+		button.addEventListener('change', calculate)
+		button.addEventListener('keyup', calculate)
+	}
+}
+
+const listenRemoveButtons = () => {
+	for (const removeButton of removeFieldsButtons) {
+		removeButton.addEventListener('click', removeField)
+	}
+}
+
+calculateButton.addEventListener('click', calculate)
 
 //Wersja zieew
-values.forEach(val => val.addEventListener('change', calculate))
-values.forEach(val => val.addEventListener('keyup', calculate))
+listenAddButtons()
+
+//Wersja normal
+listenRemoveButtons()
+addFieldsButtons.addEventListener('click', addField)

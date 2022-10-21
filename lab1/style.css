@@ -1,3 +1,48 @@
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	font-size: 36px;
+}
+
+#containter {
+	max-width: 500px;
+	padding-top: 100px;
+	margin: auto;
+}
+
+.resultsTable,
+.formTable {
+	float: left;
+	width: 50%;
+}
+
 .results {
 	font-weight: bold;
+}
+
+.addField {
+	margin: 20px 0px;
+	padding: 5px;
+}
+
+.calculate {
+	margin: 15px;
+}
+
+.deleteField,
+.addField {
+	cursor: pointer;
+}
+
+.formDiv {
+	margin: 20px 0px;
+	width: 100%;
+}
+
+input {
+	height: 30px;
 }

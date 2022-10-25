@@ -1,6 +1,7 @@
-const images = document.querySelectorAll('img')
+const images = document.querySelectorAll('.img')
 const dotsContainer = document.querySelector('.dots')
 const perviousBtn = document.querySelector('.previous')
+const pauseBtn = document.querySelector('.pause')
 const nextBtn = document.querySelector('.next')
 let currentImage = 0
 let activeDot = 0
@@ -152,8 +153,19 @@ const SliderAnimation = () => {
 	}
 }
 
+const PauseSliderAnimation = () => {
+	if (pauseBtn.textContent == '⏸️') {
+		pauseBtn.textContent = '▶️'
+		clearInterval(animationInterval)
+	} else if (pauseBtn.textContent == '▶️') {
+		pauseBtn.textContent = '⏸️'
+		animationInterval = setInterval(SliderAnimation, 3000)
+	}
+}
+
 perviousBtn.addEventListener('click', PreviousImage)
 nextBtn.addEventListener('click', NextImage)
 dots.forEach(x => x.addEventListener('click', ChangeImage))
 
-animationInterval = setInterval(SliderAnimation, 5000)
+animationInterval = setInterval(SliderAnimation, 3000)
+pauseBtn.addEventListener('click', PauseSliderAnimation)

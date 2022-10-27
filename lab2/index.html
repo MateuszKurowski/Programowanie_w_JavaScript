@@ -9,41 +9,51 @@
 </head>
 
 <body>
-    <div id="slider">
-        <div class="slides">
-            <div class="img">
-                <span>Test</span>
-                <img src="https://source.unsplash.com/collection/928423/600x400" alt="1">
-            </div>
-            <div class="img">
-                <img src="https://source.unsplash.com/collection/928422/600x400" alt="2">
-            </div>
-            <div class="img">
-                <img src="https://source.unsplash.com/collection/928423/600x400" alt="3">
-            </div>
-            <div class="img">
-                <img src="https://source.unsplash.com/collection/928422/600x400" alt="4">
-            </div>
-            <div class="img">
-                <img src="https://source.unsplash.com/collection/928423/600x400" alt="5">
-
-            </div>
-            <div class="img">
-                <img src="https://source.unsplash.com/collection/928422/600x400" alt="6">
-            </div>
-        </div>
-    </div>
-    <div class="controlMenu">
-        <div class="dots">
-        </div>
-        <div class="controlButtons">
-            <button class="btn previous" disabled>⬅️</button>
-            <button class="btn pause">⏸️</button>
-            <button class="btn next">➡️</button>
-        </div>
-    </div>
     <main>
+        <div id="slider">
+            <div class="slides">
+                <div class="slide">
+                    <span>Test</span>
+                    <img src="./img/cat-7544821_960_720.webp" alt="1">
+                </div>
+                <div class="slide">
+                    <img src="./img/herring-gull-7394570_960_720.jpg" alt="2">
+                </div>
+                <div class="slide">
+                    <img src="./img/old-man-7531093_960_720.jpg" alt="3">
+                </div>
+                <div class="slide">
+                    <img src="./img/paris-7427636_960_720.jpg" alt="4">
+                </div>
+                <div class="slide">
+                    <img src="./img/river-7489170_960_720.jpg" alt="5">
+                </div>
+                <div class="slide">
+                    <img src="./img/muhlviertel-7544316_960_720.jpg" alt="6">
+                </div>
+            </div>
+        </div>
+        <div class="controlMenu">
+            <div class="dots">
+            </div>
+            <div class="controlButtons">
+                <button class="btn previous" disabled>⬅️</button>
+                <button class="btn pause">⏸️</button>
+                <button class="btn next">➡️</button>
+            </div>
+            <div class="slideAnimation">
+                <label>Crossfading animation: </label>
+                <input class="checkAnimation" type="checkbox" />
+            </div>
+        </div>
     </main>
+
+    <aside class="hide"></aside>
+
+    <footer>
+        <p>© 2022 Mateusz Kurowski - Numer album 13424</p>
+    </footer>
+
     <script src="./script.js"></script>
 </body>
 

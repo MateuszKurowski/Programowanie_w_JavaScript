@@ -157,3 +157,9 @@ button:hover {
 .notePin {
 	align-self: flex-start;
 }
+
+.edit,
+.delete {
+	display: inline-block;
+	width: 41%;
+}

@@ -25,6 +25,21 @@ const add = async (...args) => {
 	return sum
 }
 
-;(async () => {
-	console.log(await add(1, 2, 3, 4, 'asd'))
+const measuerTheTime = async func => {
+	const start = performance.now()
+	await func.then(() => {
+		const stop = performance.now()
+		const time = Math.round(stop - start) / 1000
+		console.log(`Czas wykonania działania: ${time} sekund`)
+	})
+}
+
+const func = (async () => {
+	const table = Array.from({ length: 100 }, () => Math.floor(Math.random() * 100))
+	console.log(`Elementy: ${table}`)
+	console.log('Wykonuje obliczenia..')
+	const sum = await add(...table)
+	console.log(`Suma dodawania: ${sum}`)
 })()
+
+const result = measuerTheTime(func)

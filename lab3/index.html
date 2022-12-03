@@ -10,11 +10,6 @@
 
 <body>
     <main>
-        <div class="playButtons">
-            <button class="playAll">Play all</button> <br>
-            <button class="playSelected">Play selected</button>
-        </div>
-
         <div class="drums">
             <audio src="./sounds/clap.wav" controls id="s1"></audio>
             <audio src="./sounds/hihat.wav" controls id="s2"></audio>
@@ -27,21 +22,55 @@
             <audio src="./sounds/tom.wav" controls id="s9"></audio>
         </div>
 
-        <div class="ownPaths">
-            <audio controls id="ms1" class="ms"></audio>
-            <audio controls id="ms2" class="ms"></audio>
-            <audio controls id="ms3" class="ms"></audio>
-            <audio controls id="ms4" class="ms"></audio>
+        <div class="instruction">
+            <p>
+                Use your keys from keyboard to play sounds:
+            </p>
+            <p>
+                <span class=instructionNumber>A</span>
+                <span class=instructionNumber>S</span>
+                <span class=instructionNumber>D</span>
+                <span class=instructionNumber>F</span>
+                <span class=instructionNumber>G</span>
+                <span class=instructionNumber>H</span>
+                <span class=instructionNumber>J</span>
+                <span class=instructionNumber>K</span>
+                <span class=instructionNumber>L</span>
+            </p>
         </div>
 
-        <div class="recordMenu">
+        <hr>
+
+        <div class="playAudioMenu">
+            <p>
+                Select which track(s) you want to play audio from:
+            </p>
+            <div class="paths">
+                <input type="checkbox" value="0" class="paths" disabled>Path 1 <br />
+                <input type="checkbox" value="1" class="paths" disabled>Path 2<br />
+                <input type="checkbox" value="2" class="paths" disabled>Path 3<br />
+                <input type="checkbox" value="3" class="paths" disabled>Path 4<br />
+            </div>
+            <div class="playButtons">
+                <button class="playSelected">Play selected</button>
+                <button class="playAll">Play all</button>
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="recordAudioMenu">
+            <p>
+                Select which track you want to record the audio to, then click record:
+            </p>
             <form>
-                <input id="p1" type="radio" value="p1" name="path" checked="checked">Ścieżka 1 <br>
-                <input id="p2" type="radio" value="p2" name="path">Ścieżka 2 <br>
-                <input id="p3" type="radio" value="p3" name="path">Ścieżka 3 <br>
-                <input id="p4" type="radio" value="p4" name="path">Ścieżka 4 <br>
+                <input type="radio" name="recordPath" value="0" checked="checked">Path 1<br />
+                <input type="radio" name="recordPath" value="1">Path 2<br />
+                <input type="radio" name="recordPath" value="2">Path 3<br />
+                <input type="radio" name="recordPath" value="3">Path 4<br />
             </form>
-            <button class="Record">Record</button>
+            <button class="record">Record</button> <br />
+            <input type="checkbox" value="0" class="overwrite">Overwrite path
         </div>
     </main>
     <script src="./script.js"></script>

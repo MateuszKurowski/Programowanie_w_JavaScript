@@ -1,15 +1,15 @@
-document.addEventListener('keypress', onKeyPress)
-const btn = document.querySelector('.Record')
-const ms1 = document.querySelector('#ms1')
-
-let isRecording = false
-
-var constraints = {
-	audio: true,
-	video: false,
-}
-
+const btnRecord = document.querySelector('.record')
+const btnPlaySelectedSound = document.querySelector('.playSelected')
+const btnPlayAllSound = document.querySelector('.playAll')
+const recordPaths = document.querySelector('.recordAudioMenu').querySelectorAll('input')
+const audioPaths = document.querySelector('.playAudioMenu').querySelectorAll('input')
 const sound = './sound'
+let isRecording = false
+const recordedPaths = []
+let currentRecodingPath = 0
+let startRecordTime
+
+recordPaths.forEach(x => recordedPaths.push([]))
 
 const KeyToSound = {
 	a: document.querySelector('#s1'),
@@ -23,66 +23,80 @@ const KeyToSound = {
 	l: document.querySelector('#s9'),
 }
 
-function playSound(sound) {
+const playSound = sound => {
 	sound.currentTime = 0
 	sound.play()
 }
 
-function onKeyPress(event) {
+const onKeyPress = event => {
 	const sound = KeyToSound[event.key]
+	if (!sound) return
+	if (isRecording) {
+		const note = {
+			sound: sound,
+			startTime: Date.now() - startRecordTime,
+		}
+		recordedPaths[currentRecodingPath].push(note)
+	}
 	playSound(sound)
 }
 
-const RecordAudio = () => {
-	return new Promise(resolve => {
-		navigator.mediaDevices.	({ audio: true, video: false }).then(stream => {
-			const mediaRecorder = new MediaRecorder(stream)
-			const audioChunks = []
+const toggleRecording = () => {
+	if (isRecording) stopRecordAudio()
+	else startRecordAudio()
+}
 
-			mediaRecorder.addEventListener('dataavailable', event => {
-				audioChunks.push(event.data)
-			})
+const stopRecordAudio = () => {
+	isRecording = false
+	btnRecord.classList.toggle('active')
+	unblockChangePath()
+	audioPaths[currentRecodingPath].disabled = false
+}
 
-			const start = () => {
-				mediaRecorder.start()
-			}
+const startRecordAudio = () => {
+	isRecording = true
+	btnRecord.classList.toggle('active')
+	blockChangePath()
+	currentRecodingPath = Array.from(recordPaths).find(node => node.checked).value
+	startRecordTime = Date.now()
+}
 
-			const stop = () => {
-				return new Promise(resolve => {
-					mediaRecorder.addEventListener('stop', () => {
-						const audioBlob = new Blob(audioChunks)
-						const audioUrl = URL.createObjectURL(audioBlob)
+const blockChangePath = () => {
+	recordPaths.forEach(path => (path.disabled = true))
+}
 
-						const audio = new Audio(audioUrl)
-						if (window.URL) {
-							ms1.srcObject = stream
-						} else {
-							ms1.src = stream
-						}
-						const play = () => {
-							audio.play()
-						}
+const unblockChangePath = () => {
+	recordPaths.forEach(path => (path.disabled = false))
+}
 
-						resolve({ audioBlob, audioUrl })
-					})
+const playOnePath = pathId => {
+	const path = recordedPaths[pathId]
+	if (path.length === 0) return
 
-					mediaRecorder.stop()
-				})
-			}
-
-			resolve({ start, stop })
-		})
+	path.forEach(sound => {
+		setTimeout(() => {
+			playSound(sound.sound)
+		}, sound.startTime)
 	})
 }
 
-const sleep = time => new Promise(resolve => setTimeout(resolve, time))
+const playSelectedSounds = () => {
+	let selected = []
+	audioPaths.forEach(path => {
+		if (path.checked) selected.push(path.value)
+	})
+	selected.forEach(path => {
+		playOnePath(path)
+	})
+}
 
-;(async () => {
-	const recorder = await RecordAudio()
-	recorder.start()
-	await sleep(3000)
-	const audio = await recorder.stop()
-	//audio.play()
-})()
+const playAllSounds = () => {
+	recordPaths.forEach(path => {
+		playOnePath(path.value)
+	})
+}
 
-btn.addEventListener('click', RecordAudio)
+document.addEventListener('keypress', onKeyPress)
+btnRecord.addEventListener('click', toggleRecording)
+btnPlaySelectedSound.addEventListener('click', playSelectedSounds)
+btnPlayAllSound.addEventListener('click', playAllSounds)

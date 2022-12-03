@@ -1,3 +1,7 @@
 .drums {
 	display: none;
 }
+
+.active {
+	background-color: red;
+}

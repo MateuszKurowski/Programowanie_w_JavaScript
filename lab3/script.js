@@ -1,10 +1,15 @@
 document.addEventListener('keypress', onKeyPress)
-const btn = document.querySelector('.test')
-btn.addEventListener('click', RecordAudio)
+const btn = document.querySelector('.Record')
+const ms1 = document.querySelector('#ms1')
 
-const sounds = './sound'
-console.log(sounds);
-console.log(open(sounds));
+let isRecording = false
+
+var constraints = {
+	audio: true,
+	video: false,
+}
+
+const sound = './sound'
 
 const KeyToSound = {
 	a: document.querySelector('#s1'),
@@ -28,28 +33,56 @@ function onKeyPress(event) {
 	playSound(sound)
 }
 
-function RecordAudio() {
-	let stream
+const RecordAudio = () => {
+	return new Promise(resolve => {
+		navigator.mediaDevices.	({ audio: true, video: false }).then(stream => {
+			const mediaRecorder = new MediaRecorder(stream)
+			const audioChunks = []
 
-}
+			mediaRecorder.addEventListener('dataavailable', event => {
+				audioChunks.push(event.data)
+			})
 
-if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-	console.log('getUserMedia supported.')
-	navigator.mediaDevices
-		.getUserMedia(
-			// constraints - only audio needed for this app
-			{
-				audio: true,
+			const start = () => {
+				mediaRecorder.start()
 			}
-		)
 
-		// Success callback
-		.then(stream => {})
+			const stop = () => {
+				return new Promise(resolve => {
+					mediaRecorder.addEventListener('stop', () => {
+						const audioBlob = new Blob(audioChunks)
+						const audioUrl = URL.createObjectURL(audioBlob)
 
-		// Error callback
-		.catch(err => {
-			console.error(`The following getUserMedia error occurred: ${err}`)
+						const audio = new Audio(audioUrl)
+						if (window.URL) {
+							ms1.srcObject = stream
+						} else {
+							ms1.src = stream
+						}
+						const play = () => {
+							audio.play()
+						}
+
+						resolve({ audioBlob, audioUrl })
+					})
+
+					mediaRecorder.stop()
+				})
+			}
+
+			resolve({ start, stop })
 		})
-} else {
-	console.log('getUserMedia not supported on your browser!')
+	})
 }
+
+const sleep = time => new Promise(resolve => setTimeout(resolve, time))
+
+;(async () => {
+	const recorder = await RecordAudio()
+	recorder.start()
+	await sleep(3000)
+	const audio = await recorder.stop()
+	//audio.play()
+})()
+
+btn.addEventListener('click', RecordAudio)

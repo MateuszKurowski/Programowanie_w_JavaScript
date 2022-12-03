@@ -9,10 +9,12 @@ main {
 	text-align: center;
 }
 
+#metronome,
 .drums {
 	display: none;
 }
 
+.metronomeSwitch,
 .playButtons > button,
 .record {
 	cursor: pointer;
@@ -23,10 +25,7 @@ main {
 	margin-bottom: 0.3rem;
 }
 
-.active {
-	background-color: red;
-}
-
+.metronomeSwitch:hover,
 .record:hover,
 .playButtons > button:hover {
 	background-color: gray;
@@ -42,4 +41,16 @@ main {
 	border: 2px black solid;
 	font-size: 1.5rem;
 	padding: 0.2rem;
+}
+
+.metronomeMenu > input {
+	margin: 0.4rem;
+}
+
+.beatsPerMinute {
+	width: 55px;
+}
+
+.active {
+	background-color: red;
 }

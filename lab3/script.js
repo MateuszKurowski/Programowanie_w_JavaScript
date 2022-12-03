@@ -1,13 +1,19 @@
 const btnRecord = document.querySelector('.record')
+const overwrite = document.querySelector('.overwrite')
 const btnPlaySelectedSound = document.querySelector('.playSelected')
 const btnPlayAllSound = document.querySelector('.playAll')
+const metronomeSound = document.querySelector('#metronome')
+const btnMetronome = document.querySelector('.metronomeSwitch')
+const metronomeBeats = document.querySelector('.beatsPerMinute')
 const recordPaths = document.querySelector('.recordAudioMenu').querySelectorAll('input')
 const audioPaths = document.querySelector('.playAudioMenu').querySelectorAll('input')
 const sound = './sound'
 let isRecording = false
+let isMetronomeOn = false
 const recordedPaths = []
 let currentRecodingPath = 0
 let startRecordTime
+let metronomeInterval
 
 recordPaths.forEach(x => recordedPaths.push([]))
 
@@ -58,6 +64,9 @@ const startRecordAudio = () => {
 	btnRecord.classList.toggle('active')
 	blockChangePath()
 	currentRecodingPath = Array.from(recordPaths).find(node => node.checked).value
+	if (overwrite.checked) {
+		recordedPaths[currentRecodingPath] = []
+	}
 	startRecordTime = Date.now()
 }
 
@@ -96,7 +105,34 @@ const playAllSounds = () => {
 	})
 }
 
+const toggleMetronome = () => {
+	if (!isMetronomeOn) {
+		console.log('Ustawiono interwał')
+		metronomeInterval = setInterval(playMetronome, Math.round(metronomeBeats.value * 1000))
+	} else {
+		clearInterval(metronomeInterval)
+		console.log('Koniec interwału')
+	}
+	console.log(isMetronomeOn)
+	btnMetronome.classList.toggle('active')
+	isMetronomeOn = !isMetronomeOn
+}
+
+const playMetronome = () => {
+	playSound(metronomeSound)
+}
+
+const changeMetronomeInterval = () => {
+	if (!isMetronomeOn) return
+	if (!metronomeInterval) return
+	console.log(metronomeBeats.value)
+	clearInterval(metronomeInterval)
+	metronomeInterval = setInterval(playMetronome, Math.round(metronomeBeats.value * 1000))
+}
+
 document.addEventListener('keypress', onKeyPress)
 btnRecord.addEventListener('click', toggleRecording)
 btnPlaySelectedSound.addEventListener('click', playSelectedSounds)
 btnPlayAllSound.addEventListener('click', playAllSounds)
+btnMetronome.addEventListener('click', toggleMetronome)
+metronomeBeats.addEventListener('change', changeMetronomeInterval)

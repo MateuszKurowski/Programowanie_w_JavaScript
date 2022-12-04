@@ -9,22 +9,77 @@
 </head>
 
 <body>
+    <div class="popup templatePopup">
+        <div class="popupNote">
+            <div class="closePopup">❌</div>
+            <div class="editNote">
+                <div class="noteId"></div>
+                <div class="noteTextbox">
+                    <label>Pin:</label><input type="checkbox" class="formInputs notePin">
+                </div>
+                <div class="noteTextbox">
+                    <label>Date:</label><input type="text" class="formInputs noteDate">
+                </div>
+                <div class="noteTextbox">
+                    <label>Title:</label><input type="text" class="formInputs noteTitle">
+                </div>
+                <div class="noteTextbox">
+                    <label>Content:</label><textarea class="formInputs noteContent" rows="4"></textarea>
+                </div>
+                <div class="noteTextbox">
+                    <label>Color:</label><input type="text" class="formInputs noteColor">
+                </div>
+            </div>
+        </div>
+    </div>
     <main>
-        <div class="Buttons">
-            <button class="newNote">Add new note</button>
-            <button class="clearNotes">Clear saved notes</button>
+        <div class="menu">
+            <div class="buttons">
+                <button class="btnNewNote">Add note</button>
+                <button class="clearNotes">Clear all notes</button>
+            </div>
+
+            <hr>
+
+            <div class="newNote">
+                <div class="noteTextbox">
+                    <label>Title:</label><input type="text" class="formInputs">
+                </div>
+                <div class="noteTextbox">
+                    <label>Content:</label><textarea class="formInputs" rows="4"></textarea>
+                </div>
+                <div class="noteTextbox">
+                    <label>Color:</label><input type="text" class="formInputs">
+                </div>
+                <div class="noteTextbox">
+                    <label>Pin:</label><input type="checkbox" class="formInputs notePin">
+                </div>
+            </div>
         </div>
 
-        <div class="temp">
-            <label>Tytuł:</label><input type="text"><br>
-            <label>Treść:</label><input type="text"><br>
-            <label>Kolor:</label><input type="text"><br>
-            <label>Przypnij:</label><input type="checkbox"><br>
+        <hr>
 
-        </div>
+        <div class="content">
+            <div class="note template">
+                <div class="noteId"></div>
+                <div class="noteButtons">
+                    <input type="checkbox" class="notePin" disabled checked>
+                    <div class="buttons buttons2">
+                        <div class="noteButton edit">Edit</div>
+                        <div class="noteButton delete">Delete</div>
+                    </div>
+                </div>
+                <p class="noteDate">
+                    Data:
+                </p>
+                <p class="noteTitle">
+                    Temat:
+                </p>
+                <hr>
+                <p class="noteContent">
 
-        <div class="notes">
-
+                </p>
+            </div>
         </div>
     </main>
     <script src="./script.js"></script>

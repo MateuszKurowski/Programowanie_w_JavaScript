@@ -5,3 +5,43 @@ body {
 	margin: 0;
 	background-color: #eaeaea;
 }
+.card {
+	background-color: #222;
+	color: #eaeaea;
+	padding: 20px;
+	border-radius: 30px;
+	width: 100%;
+	max-width: 430px;
+	margin: 2px;
+}
+.search {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+button {
+	margin: 5px;
+	border: none;
+	border-bottom: 1px solid;
+	background-color: rgb(215, 215, 215);
+	color: #222;
+	border-radius: 30px;
+	height: 30px;
+	cursor: pointer;
+}
+input.search-bar {
+	border: none;
+	outline: none;
+	border-radius: 30px;
+	background-color: rgb(215, 215, 215);
+	height: 30px;
+	width: 100%;
+	padding: 2px 15px;
+}
+.description {
+	text-transform: capitalize;
+}
+.flex {
+	display: flex;
+	align-items: center;
+}

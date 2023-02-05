@@ -3,10 +3,16 @@ const weatherArray = []
 
 const displayWeather = data => {
 	const { name } = data
-	if (weatherArray.includes(name.toLowerCase())) {
+	if (name === undefined) {
+		alert('City not found.')
+		return
+	}
+    
+    if (weatherArray.includes(name.toLowerCase())) {
 		alert('This city has already been added!')
 		return
 	}
+	
 
 	const { icon, description } = data.weather[0]
 	const { temp, humidity } = data.main

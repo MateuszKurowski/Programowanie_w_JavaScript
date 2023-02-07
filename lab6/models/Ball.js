@@ -3,6 +3,8 @@ const minSpeed = 0.3
 
 export class Ball {
 	constructor(canvasWidth, canvasHeight, context, radius) {
+		this.boost = 0
+		this.onCursor = false
 		this.canvasHeight = canvasHeight
 		this.canvasWidth = canvasWidth
 		this.context = context
@@ -44,8 +46,19 @@ export class Ball {
 	}
 
 	draw(width, height) {
-		this.xPosition += this.vx
-		this.yPosition += this.vy
+		if (this.onCursor) {
+			this.xPosition = this.xPosition
+			this.yPosition = this.yPosition
+		} else if (this.boost) {
+			const boostY = this.vy >= 0 ? Math.abs(this.boost) : -Math.abs(this.boost)
+			const boostX = this.vx >= 0 ? Math.abs(this.boost) : -Math.abs(this.boost)
+			this.xPosition += boostY + this.vx
+			this.yPosition += boostX + this.vy
+			this.boost = 0
+		} else {
+			this.xPosition += this.vx
+			this.yPosition += this.vy
+		}
 
 		if (this.xPosition > width - this.radius || this.xPosition < this.radius) {
 			this.vx = -this.vx

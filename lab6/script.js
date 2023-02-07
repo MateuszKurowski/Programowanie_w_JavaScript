@@ -7,6 +7,7 @@ const resetButton = document.querySelector('.reset-button')
 let typeOfPower = document.getElementsByClassName('power-type')
 let typeOfPoweChecked = document.querySelector('input[name="type"]:checked')
 let powerRange = document.querySelector('.power-range')
+let power = document.querySelector('.power')
 let powerOn = document.querySelector('.power-on')
 
 let isStarted = true
@@ -60,9 +61,10 @@ const startStop = () => {
 	isStarted = !isStarted
 	if (isStarted) {
 		startStopButton.textContent = 'Stop'
-		drawBalls()
+		animationId = window.requestAnimationFrame(drawBalls)
 	} else {
 		startStopButton.textContent = 'Start'
+		window.cancelAnimationFrame(animationId)
 	}
 }
 
@@ -76,7 +78,6 @@ const reset = () => {
 	background.draw()
 	createBalls(amountOfBalls.defaultValue)
 	amountOfBalls.value = amountOfBalls.defaultValue
-	isStarted = true
 	window.cancelAnimationFrame(animationId)
 	animationId = window.requestAnimationFrame(drawBalls)
 }
@@ -122,9 +123,6 @@ const drawLine = (firstCirlePosition, secondCirlePosition) => {
 }
 
 function drawBalls() {
-	if (!isStarted) {
-		return
-	}
 	playgroundCtx.clearRect(0, 0, getWidth(), getHeight())
 	for (let i = 0; i < balls.length; i++) {
 		const ball = balls[i]
@@ -177,17 +175,27 @@ const getCursorPosition = event => {
 }
 
 const pushBall = (ball, curosrPosition) => {
+	if (curosrPosition[0] == ball.xPosition && curosrPosition[1] == ball.yPosition) {
+		ball.onCursor = true
+		return
+	}
 	if (curosrPosition[0] > ball.xPosition) ball.vx = -Math.abs(ball.vx)
 	if (curosrPosition[0] < ball.xPosition) ball.vx = Math.abs(ball.vx)
 	if (curosrPosition[1] > ball.yPosition) ball.vy = -Math.abs(ball.vy)
 	if (curosrPosition[1] < ball.yPosition) ball.vy = Math.abs(ball.vy)
+	ball.boost = power.value
 }
 
 const pullBall = (ball, curosrPosition) => {
+	if (curosrPosition[0] == ball.xPosition && curosrPosition[1] == ball.yPosition) {
+		ball.onCursor = true
+		return
+	}
 	if (curosrPosition[0] > ball.xPosition) ball.vx = Math.abs(ball.vx)
-	if (curosrPosition[0] < ball.xPosition) ball.vx = -Math.abs(ball.vx)
+	else if (curosrPosition[0] < ball.xPosition) ball.vx = -Math.abs(ball.vx)
 	if (curosrPosition[1] > ball.yPosition) ball.vy = Math.abs(ball.vy)
-	if (curosrPosition[1] < ball.yPosition) ball.vy = -Math.abs(ball.vy)
+	else if (curosrPosition[1] < ball.yPosition) ball.vy = -Math.abs(ball.vy)
+	ball.boost = power.value
 }
 
 setCanvasDimensions()
@@ -202,6 +210,7 @@ window.addEventListener('resize', () => {
 amountOfBalls.addEventListener('change', addOrDeleteBalls)
 powerOn.addEventListener('change', () => !powerOn)
 powerRange.addEventListener('change', () => (powerRange = document.querySelector('.power-range')))
+power.addEventListener('change', () => (power = document.querySelector('.power')))
 for (let index = 0; index < typeOfPower.length; index++) {
 	typeOfPower[index].addEventListener('change', () => {
 		typeOfPoweChecked = document.querySelector('input[name="type"]:checked')
@@ -211,10 +220,10 @@ typeOfPower
 startStopButton.addEventListener('click', startStop)
 resetButton.addEventListener('click', reset)
 canvasPlayground.addEventListener('click', e => {
-	const curosrPosition = getCursorPosition(e)
+	const lastCurosrPosition = getCursorPosition(e)
 	for (let i = 0; i < balls.length; i++) {
 		const ball = balls[i]
-		const distance = getDistance(curosrPosition, ball.getPosition())
+		const distance = getDistance(lastCurosrPosition, ball.getPosition())
 		if (distance <= ball.radius) {
 			divedBall(ball)
 			break
@@ -223,21 +232,19 @@ canvasPlayground.addEventListener('click', e => {
 })
 
 canvasPlayground.addEventListener('mousemove', e => {
-	if (!powerOn.checked) return
-	const curosrPosition = getCursorPosition(e)
+	const lastCurosrPosition = getCursorPosition(e)
 	for (let i = 0; i < balls.length; i++) {
 		const ball = balls[i]
-		const distance = getDistance(curosrPosition, ball.getPosition())
+		const distance = getDistance(lastCurosrPosition, ball.getPosition()) - ball.radius
 
 		if (distance > powerRange.value) continue
-		console.log(typeOfPoweChecked.id)
 		switch (typeOfPoweChecked.id) {
 			case 'pull':
-				pullBall(ball, curosrPosition)
+				pullBall(ball, lastCurosrPosition)
 				break
 
 			case 'push':
-				pushBall(ball, curosrPosition)
+				pushBall(ball, lastCurosrPosition)
 				break
 		}
 	}

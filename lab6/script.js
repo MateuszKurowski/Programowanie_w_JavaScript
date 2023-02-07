@@ -1,9 +1,14 @@
 import { Background } from './models/Background.js'
 import { Ball } from './models/Ball.js'
 
-let amountOfBalls = document.querySelector('.circles-amount')
+let amountOfBalls = document.querySelector('.balls-amount')
 const startStopButton = document.querySelector('.start-stop-button')
 const resetButton = document.querySelector('.reset-button')
+let typeOfPower = document.getElementsByClassName('power-type')
+let typeOfPoweChecked = document.querySelector('input[name="type"]:checked')
+let powerRange = document.querySelector('.power-range')
+let powerOn = document.querySelector('.power-on')
+
 let isStarted = true
 let animationId
 
@@ -22,29 +27,32 @@ const setCanvasDimensions = () => {
 }
 
 const background = new Background(backgroundCtx, getWidth(), 40)
-const circles = []
+const balls = []
 
 const createBalls = amount => {
 	for (let i = 0; i < amount; i++) {
-		circles.push(new Ball(getWidth(), getHeight(), playgroundCtx))
+		const ball = new Ball(getWidth(), getHeight(), playgroundCtx)
+		if (ball && ball.radius > 2) {
+			balls.push(ball)
+		}
 	}
 }
 
 const addOrDeleteBalls = () => {
-	amountOfBalls = document.querySelector('.circles-amount')
+	amountOfBalls = document.querySelector('.balls-amount')
 	const amount = amountOfBalls.value
 
 	if (!amount) {
-		circles.splice(0, circles.length)
+		balls.splice(0, balls.length)
 	} else if (amount < 0) {
 		amountOfBalls.value = 0
 		return
-	} else if (amount == circles.length) {
+	} else if (amount == balls.length) {
 		return
-	} else if (amount > circles.length) {
-		createBalls(amount - circles.length)
+	} else if (amount > balls.length) {
+		createBalls(amount - balls.length)
 	} else {
-		circles.splice(0, circles.length - amount)
+		balls.splice(0, balls.length - amount)
 	}
 }
 
@@ -59,7 +67,7 @@ const startStop = () => {
 }
 
 const reset = () => {
-	circles.splice(0, circles.length)
+	balls.splice(0, balls.length)
 	playgroundCtx.clearRect(0, 0, getWidth(), getHeight())
 	backgroundCtx.clearRect(0, 0, getWidth(), getHeight())
 	backgroundCtx.reset()
@@ -118,22 +126,25 @@ function drawBalls() {
 		return
 	}
 	playgroundCtx.clearRect(0, 0, getWidth(), getHeight())
-	for (let i = 0; i < circles.length; i++) {
-		const circle = circles[i]
-		circle.draw(getWidth(), getHeight())
-		if (circle.radius < 5) {
-			circles.splice(i, 1)
+	for (let i = 0; i < balls.length; i++) {
+		const ball = balls[i]
+		ball.draw(getWidth(), getHeight())
+		if (ball.radius * 2 < 5) {
+			balls.splice(i, 1)
 			continue
 		}
-		for (let j = i; j < circles.length; j++) {
+		if (ball.radius * 2 >= Math.min(getHeight(), getWidth()) * 0.7) {
+			divedBall(ball)
+		}
+		for (let j = i; j < balls.length; j++) {
 			if (i == j) {
 				continue
 			}
-			const firstCirle = circles[i]
-			const secondBall = circles[j]
+			const firstCirle = balls[i]
+			const secondBall = balls[j]
 			try {
 				const distance =
-					getDistance(firstCirle.getPosition(), secondBall.getPosition()) - firstCirle.radius + secondBall.radius
+					getDistance(firstCirle.getPosition(), secondBall.getPosition()) - firstCirle.radius - secondBall.radius
 				if (distance < 200) {
 					drawLine(firstCirle.getPosition(), secondBall.getPosition())
 					transferPower(firstCirle, secondBall)
@@ -144,8 +155,39 @@ function drawBalls() {
 	animationId = window.requestAnimationFrame(drawBalls)
 }
 
-const divedBall = (firstBall, secondBall) => {
-	
+const divedBall = ball => {
+	if (ball.radius < 5) {
+		const index = balls.findIndex(x => x == ball)
+		balls.slice(index, 1)
+		return
+	}
+	const secondBall = new Ball(getWidth(), getHeight(), playgroundCtx, ball.radius / 2)
+	secondBall.vx = ball.vx > 0 ? -Math.abs(secondBall.vx) : Math.abs(secondBall.vx)
+	secondBall.vy = ball.vy > 0 ? -Math.abs(secondBall.vy) : Math.abs(secondBall.vy)
+	ball.transferPower(-(ball.radius / 2), getWidth(), getHeight())
+	secondBall.yPosition = ball.yPosition
+	secondBall.xPosition = ball.xPosition - ball.radius
+	balls.push(secondBall)
+}
+
+const getCursorPosition = event => {
+	const x = event.offsetX
+	const y = event.offsetY
+	return [x, y]
+}
+
+const pushBall = (ball, curosrPosition) => {
+	if (curosrPosition[0] > ball.xPosition) ball.vx = -Math.abs(ball.vx)
+	if (curosrPosition[0] < ball.xPosition) ball.vx = Math.abs(ball.vx)
+	if (curosrPosition[1] > ball.yPosition) ball.vy = -Math.abs(ball.vy)
+	if (curosrPosition[1] < ball.yPosition) ball.vy = Math.abs(ball.vy)
+}
+
+const pullBall = (ball, curosrPosition) => {
+	if (curosrPosition[0] > ball.xPosition) ball.vx = Math.abs(ball.vx)
+	if (curosrPosition[0] < ball.xPosition) ball.vx = -Math.abs(ball.vx)
+	if (curosrPosition[1] > ball.yPosition) ball.vy = Math.abs(ball.vy)
+	if (curosrPosition[1] < ball.yPosition) ball.vy = -Math.abs(ball.vy)
 }
 
 setCanvasDimensions()
@@ -158,5 +200,45 @@ window.addEventListener('resize', () => {
 	background.draw()
 })
 amountOfBalls.addEventListener('change', addOrDeleteBalls)
+powerOn.addEventListener('change', () => !powerOn)
+powerRange.addEventListener('change', () => (powerRange = document.querySelector('.power-range')))
+for (let index = 0; index < typeOfPower.length; index++) {
+	typeOfPower[index].addEventListener('change', () => {
+		typeOfPoweChecked = document.querySelector('input[name="type"]:checked')
+	})
+}
+typeOfPower
 startStopButton.addEventListener('click', startStop)
 resetButton.addEventListener('click', reset)
+canvasPlayground.addEventListener('click', e => {
+	const curosrPosition = getCursorPosition(e)
+	for (let i = 0; i < balls.length; i++) {
+		const ball = balls[i]
+		const distance = getDistance(curosrPosition, ball.getPosition())
+		if (distance <= ball.radius) {
+			divedBall(ball)
+			break
+		}
+	}
+})
+
+canvasPlayground.addEventListener('mousemove', e => {
+	if (!powerOn.checked) return
+	const curosrPosition = getCursorPosition(e)
+	for (let i = 0; i < balls.length; i++) {
+		const ball = balls[i]
+		const distance = getDistance(curosrPosition, ball.getPosition())
+
+		if (distance > powerRange.value) continue
+		console.log(typeOfPoweChecked.id)
+		switch (typeOfPoweChecked.id) {
+			case 'pull':
+				pullBall(ball, curosrPosition)
+				break
+
+			case 'push':
+				pushBall(ball, curosrPosition)
+				break
+		}
+	}
+})

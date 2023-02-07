@@ -2,7 +2,7 @@ const maxSpeed = 8
 const minSpeed = 0.3
 
 export class Ball {
-	constructor(canvasWidth, canvasHeight, context) {
+	constructor(canvasWidth, canvasHeight, context, radius) {
 		this.canvasHeight = canvasHeight
 		this.canvasWidth = canvasWidth
 		this.context = context
@@ -11,6 +11,12 @@ export class Ball {
 		this.maxRadius = 0
 		this.checkMaxRadius()
 		this.radius = Math.random() * (this.maxRadius - this.minRadius) + this.minRadius
+		if (radius) {
+			this.radius = radius
+		}
+		if (this.radius < 5) {
+			return null
+		}
 
 		this.speed = 0
 		this.vx = 0
@@ -61,6 +67,9 @@ export class Ball {
 		}
 
 		this.context.beginPath()
+		if (this.radius < 0) {
+			return
+		}
 		this.context.arc(this.xPosition, this.yPosition, this.radius, 0, 2 * Math.PI)
 		this.context.fillStyle = this.color
 		this.context.fill()
@@ -72,7 +81,7 @@ export class Ball {
 		return [this.xPosition, this.yPosition]
 	}
 
-	transferPower(powerToChange, canvasHeight, canvasWidth) {
+	transferPower(powerToChange, canvasWidth, canvasHeight) {
 		this.canvasHeight = canvasHeight
 		this.canvasWidth = canvasWidth
 		const procent = (powerToChange * 100) / this.radius

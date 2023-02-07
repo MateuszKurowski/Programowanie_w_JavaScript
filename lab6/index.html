@@ -13,13 +13,15 @@
         <button class="start-stop-button">Stop</button>
         <button class="reset-button">Reset</button>
 
-        <label for="cirlces">Amount of circles:</label>
-        <input type="number" name="circles" class="circles-amount" value="15" min="0">
+        <label for="balls">Amount of balls:</label>
+        <input type="number" name="balls" class="balls-amount" value="15" min="0">
 
-        <label for="power">Power:</label>
-        <input type="number" name="power" class="power-amount" value="10">
+        <label for="power">Power range:</label>
+        <input type="number" name="power" class="power-range" value="50">
         <label for="type">Type of power:</label>
-        <input type="checkbox" name="type" class="power-type">
+        <input type="radio" id="pull" name="type" class="power-type" checked>Pull
+        <input type="radio" id="push" name="type" class="power-type">Push
+        <input type="checkbox" name="powerOn" class="power-on">Power on
 
     </div>
     <canvas id="canvas-background" class="canvas">

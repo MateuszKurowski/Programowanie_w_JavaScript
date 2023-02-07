@@ -49,12 +49,32 @@ export class Ball {
 		if (this.onCursor) {
 			this.xPosition = this.xPosition
 			this.yPosition = this.yPosition
+			this.context.beginPath()
+			if (this.radius < 0) {
+				return
+			}
+			this.context.arc(this.xPosition, this.yPosition, this.radius, 0, 2 * Math.PI)
+			this.context.fillStyle = this.color
+			this.context.fill()
+			this.context.stroke()
+			this.context.closePath()
+			return
 		} else if (this.boost) {
 			const boostY = this.vy >= 0 ? Math.abs(this.boost) : -Math.abs(this.boost)
 			const boostX = this.vx >= 0 ? Math.abs(this.boost) : -Math.abs(this.boost)
 			this.xPosition += boostY + this.vx
 			this.yPosition += boostX + this.vy
 			this.boost = 0
+			this.context.beginPath()
+			if (this.radius < 0) {
+				return
+			}
+			this.context.arc(this.xPosition, this.yPosition, this.radius, 0, 2 * Math.PI)
+			this.context.fillStyle = this.color
+			this.context.fill()
+			this.context.stroke()
+			this.context.closePath()
+			return
 		} else {
 			this.xPosition += this.vx
 			this.yPosition += this.vy

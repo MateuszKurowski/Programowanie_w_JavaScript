@@ -232,6 +232,7 @@ canvasPlayground.addEventListener('click', e => {
 })
 
 canvasPlayground.addEventListener('mousemove', e => {
+	window.cancelAnimationFrame(animationId)
 	const lastCurosrPosition = getCursorPosition(e)
 	for (let i = 0; i < balls.length; i++) {
 		const ball = balls[i]
@@ -248,4 +249,5 @@ canvasPlayground.addEventListener('mousemove', e => {
 				break
 		}
 	}
+	animationId = window.requestAnimationFrame(drawBalls)
 })

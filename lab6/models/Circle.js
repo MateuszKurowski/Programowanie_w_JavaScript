@@ -1,20 +1,23 @@
 export class Circle {
-	constructor(canvasWidth, canvasHeight, context, radius) {
+	constructor(canvasWidth, canvasHeight, context) {
 		this.canvasHeight = canvasHeight
 		this.canvasWidth = canvasWidth
 		this.context = context
 
 		const min = Math.min(canvasHeight, canvasWidth)
-		const minRadius = Math.min(canvasHeight, canvasWidth) * 0.1 * 0.3 //10%
-		const maxRadius = Math.min(canvasHeight, canvasWidth) * 0.5 * 0.2 // 80%
-		console.log(min)
-		console.log(minRadius)
-		console.log(maxRadius)
-		this.radius = !radius ? Math.random() * maxRadius + minRadius : radius
+		const minRadius = Math.min(canvasHeight, canvasWidth) * 0.1 * 0.2 //10%
+		const maxRadius = Math.min(canvasHeight, canvasWidth) * 0.2 * 0.4 // 80%
+		this.radius = Math.random() * (maxRadius - minRadius) + minRadius
 
-		const speed = Math.random() * 10 + 1
-		this.vx = speed - Math.random() * 10
+		const procent = 100 - ((this.radius * 100) / maxRadius)
+		const speed = procent / 10
+		// console.log(maxRadius)
+		// console.log(`Radius=${this.radius} ; Speed=${speed}`)
+		// const speed = Math.random() * 10 + 1
+		this.vx = speed * Math.random()
 		this.vy = speed - this.vx
+		// console.log(`vx=${this.vx} ; vy=${this.vy}`)
+		// console.log(`sum=${this.vx + this.vy}`)
 
 		this.color =
 			'rgb(' +
@@ -41,6 +44,18 @@ export class Circle {
 		}
 		if (this.yPosition > height - this.radius || this.yPosition < this.radius) {
 			this.vy = -this.vy
+		}
+		if (this.xPosition >= width - this.radius) {
+			this.xPosition = width - this.radius
+		}
+		if (this.yPosition >= height - this.radius) {
+			this.yPosition = height - this.radius
+		}
+		if (this.xPosition < 0 + this.radius) {
+			this.xPosition = this.radius
+		}
+		if (this.yPosition < 0 + this.radius) {
+			this.yPosition = this.radius
 		}
 
 		this.context.beginPath()

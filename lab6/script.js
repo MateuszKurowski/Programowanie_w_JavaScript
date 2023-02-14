@@ -162,16 +162,14 @@ const divedBall = ball => {
 		return
 	}
 	const secondBall = new Ball(getWidth(), getHeight(), playgroundCtx, ball.radius / 2)
-	secondBall.vx = ball.vx > 0 ? -Math.abs(secondBall.vx) : Math.abs(secondBall.vx)
-	secondBall.vy = ball.vy > 0 ? -Math.abs(secondBall.vy) : Math.abs(secondBall.vy)
 	ball.transferPower(-(ball.radius / 2), getWidth(), getHeight())
 	secondBall.yPosition = ball.yPosition
 	secondBall.xPosition = ball.xPosition - ball.radius
 	ball.setSpeed()
 	secondBall.setSpeed()
+	secondBall.vx = ball.vx > 0 ? -Math.abs(secondBall.vx) : Math.abs(secondBall.vx)
+	secondBall.vy = ball.vy > 0 ? -Math.abs(secondBall.vy) : Math.abs(secondBall.vy)
 	balls.push(secondBall)
-	console.log(ball)
-	console.log(secondBall)
 }
 
 const getCursorPosition = event => {

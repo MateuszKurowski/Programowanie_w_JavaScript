@@ -80,6 +80,20 @@ export class Ball {
 			this.yPosition += this.vy
 		}
 
+		this.CheckIsBallInsideCanvas(width, height)
+
+		this.context.beginPath()
+		if (this.radius < 0) {
+			return
+		}
+		this.context.arc(this.xPosition, this.yPosition, this.radius, 0, 2 * Math.PI)
+		this.context.fillStyle = this.color
+		this.context.fill()
+		this.context.stroke()
+		this.context.closePath()
+	}
+
+	CheckIsBallInsideCanvas(width, height) {
 		if (this.xPosition > width - this.radius || this.xPosition < this.radius) {
 			this.vx = -this.vx
 		}
@@ -92,22 +106,12 @@ export class Ball {
 		if (this.yPosition >= height - this.radius) {
 			this.yPosition = height - this.radius
 		}
-		if (this.xPosition < 0 + this.radius) {
+		if (this.xPosition < -1 + this.radius) {
 			this.xPosition = this.radius
 		}
-		if (this.yPosition < 0 + this.radius) {
+		if (this.yPosition < -1 + this.radius) {
 			this.yPosition = this.radius
 		}
-
-		this.context.beginPath()
-		if (this.radius < 0) {
-			return
-		}
-		this.context.arc(this.xPosition, this.yPosition, this.radius, 0, 2 * Math.PI)
-		this.context.fillStyle = this.color
-		this.context.fill()
-		this.context.stroke()
-		this.context.closePath()
 	}
 
 	getPosition() {
@@ -138,6 +142,12 @@ export class Ball {
 		this.checkMaxRadius()
 		const procent = 100 - (this.radius * 100) / this.maxRadius
 		this.speed = procent / 10
+		if (this.speed < minSpeed) {
+			this.speed = minSpeed
+		}
+		if (this.speed > maxSpeed) {
+			this.speed = maxSpeed
+		}
 		const tempVx = this.speed * Math.random()
 		const tempVy = this.speed - tempVx
 		if (!this.vx && !this.vy) {

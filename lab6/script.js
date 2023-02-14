@@ -161,6 +161,7 @@ const divedBall = ball => {
 		balls.slice(index, 1)
 		return
 	}
+	console.log(ball)
 	const secondBall = new Ball(getWidth(), getHeight(), playgroundCtx, ball.radius / 2)
 	ball.transferPower(-(ball.radius / 2), getWidth(), getHeight())
 	secondBall.yPosition = ball.yPosition
@@ -170,6 +171,7 @@ const divedBall = ball => {
 	secondBall.vx = ball.vx > 0 ? -Math.abs(secondBall.vx) : Math.abs(secondBall.vx)
 	secondBall.vy = ball.vy > 0 ? -Math.abs(secondBall.vy) : Math.abs(secondBall.vy)
 	balls.push(secondBall)
+	console.log(secondBall)
 }
 
 const getCursorPosition = event => {

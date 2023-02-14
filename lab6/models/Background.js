@@ -6,7 +6,7 @@ export class Background {
 		this.rectAmountInRow = rectAmountInRow % 2 == 0 ? rectAmountInRow : rectAmountInRow + 1
 		this.rectSize = width / rectAmountInRow
 		this.colorsRows = []
-		for (let i = 1; i <= this.rectAmountInRow / 2; i++) {
+		for (let i = 1; i <= this.rectAmountInRow; i++) {
 			const row = []
 			for (let j = 1; j <= this.rectAmountInRow; j++) {
 				const color = []
@@ -22,7 +22,7 @@ export class Background {
 	draw() {
 		this.xPosition = 0
 		this.yPosition = 0
-		for (let i = 0; i < this.rectAmountInRow / 2; i++) {
+		for (let i = 0; i < this.rectAmountInRow; i++) {
 			for (let j = 0; j < this.rectAmountInRow; j++) {
 				this.context.fillStyle = `rgb(${this.colorsRows[i][j][0]}, ${this.colorsRows[i][j][1]}, ${this.colorsRows[i][j][2]})`
 				this.context.fillRect(this.xPosition, this.yPosition, this.rectSize, this.rectSize)

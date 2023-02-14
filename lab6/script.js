@@ -3,6 +3,7 @@ import { Ball } from './models/Ball.js'
 
 let amountOfBalls = document.querySelector('.balls-amount')
 let powerTransfer = document.querySelector('.transfer-power')
+let powerTransferRange = document.querySelector('.transfer-power-range')
 const startStopButton = document.querySelector('.start-stop-button')
 const resetButton = document.querySelector('.reset-button')
 let typeOfPower = document.getElementsByClassName('power-type')
@@ -20,7 +21,7 @@ const backgroundCtx = canvasBackground.getContext('2d')
 const playgroundCtx = canvasPlayground.getContext('2d')
 
 const getWidth = () => window.innerWidth - 50
-const getHeight = () => window.innerHeight - 130
+const getHeight = () => window.innerHeight - 160
 const setCanvasDimensions = () => {
 	canvasBackground.width = getWidth()
 	canvasBackground.height = getHeight()
@@ -95,8 +96,7 @@ const getDistance = (distanceI, distanceJ) => {
 }
 
 const transferPower = (firstBall, secondBall) => {
-	const powerToTransfer = powerTransfer / 100
-	console.log(powerToTransfer)
+	const powerToTransfer = parseInt(powerTransfer.value) / 100
 	if (firstBall.radius > secondBall.radius) {
 		firstBall.transferPower(powerToTransfer, getWidth(), getHeight())
 		secondBall.transferPower(-powerToTransfer, getWidth(), getHeight())
@@ -145,7 +145,7 @@ function drawBalls() {
 			try {
 				const distance =
 					getDistance(firstCirle.getPosition(), secondBall.getPosition()) - firstCirle.radius - secondBall.radius
-				if (distance < 200) {
+				if (distance < powerTransferRange.value) {
 					drawLine(firstCirle.getPosition(), secondBall.getPosition())
 					transferPower(firstCirle, secondBall)
 				}
@@ -167,7 +167,11 @@ const divedBall = ball => {
 	ball.transferPower(-(ball.radius / 2), getWidth(), getHeight())
 	secondBall.yPosition = ball.yPosition
 	secondBall.xPosition = ball.xPosition - ball.radius
+	ball.setSpeed()
+	secondBall.setSpeed()
 	balls.push(secondBall)
+	console.log(ball)
+	console.log(secondBall)
 }
 
 const getCursorPosition = event => {
@@ -213,16 +217,21 @@ amountOfBalls.addEventListener('change', addOrDeleteBalls)
 powerOn.addEventListener('change', () => !powerOn)
 powerRange.addEventListener('change', () => (powerRange = document.querySelector('.power-range')))
 powerTransfer.addEventListener('change', () => (powerTransfer = document.querySelector('.transfer-power')))
+powerTransferRange.addEventListener(
+	'change',
+	() => (powerTransferRange = document.querySelector('.transfer-power-range'))
+)
 power.addEventListener('change', () => (power = document.querySelector('.power')))
 for (let index = 0; index < typeOfPower.length; index++) {
 	typeOfPower[index].addEventListener('change', () => {
 		typeOfPoweChecked = document.querySelector('input[name="type"]:checked')
 	})
 }
-typeOfPower
 startStopButton.addEventListener('click', startStop)
 resetButton.addEventListener('click', reset)
 canvasPlayground.addEventListener('click', e => {
+	window.cancelAnimationFrame(animationId)
+
 	const lastCurosrPosition = getCursorPosition(e)
 	for (let i = 0; i < balls.length; i++) {
 		const ball = balls[i]
@@ -232,6 +241,7 @@ canvasPlayground.addEventListener('click', e => {
 			break
 		}
 	}
+	animationId = window.requestAnimationFrame(drawBalls)
 })
 
 canvasPlayground.addEventListener('mousemove', e => {

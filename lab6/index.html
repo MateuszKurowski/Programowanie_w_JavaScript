@@ -13,29 +13,33 @@
         <div class="main under-menu">
             <button class="start-stop-button">Stop</button>
             <button class="reset-button">Reset</button>
-            <div class="amount">
+            <div class="amount under-submenu">
                 <label for="balls">Amount of balls:</label>
                 <input type="number" name="balls" class="balls-amount" value="1" min="0">
             </div>
-            <div class="transfer">
+            <div class="transfer amount under-submenu">
                 <label for="transfer-power">Power of transfer:</label>
                 <input type="number" name="transfer-power" class="transfer-power" value="2" min="0">
+            </div>
+            <div class="transfer-range amount under-submenu">
+                <label for="transfer-power-range">Transfer range:</label>
+                <input type="number" name="transfer-power-range" class="transfer-power-range" value="200" min="0">
             </div>
         </div>
 
         <div class="powers under-menu">
-            <div class="switch-power">
+            <div class="switch-power amount under-submenu">
                 <label for="transfer-power">Power on:</label>
                 <input type="checkbox" name="powerOn" class="power-on">
             </div>
-            <div class="type">
+            <div class="type amount under-submenu">
                 <label for="type">Type of power:</label>
                 <input type="radio" id="pull" name="type" class="power-type" checked>Pull
                 <input type="radio" id="push" name="type" class="power-type">Push
             </div>
         </div>
 
-        <div class="power-numbers under-menu">
+        <div class="power-numbers under-menu amount under-submenu">
             <label for="power">Power:</label>
             <input type="number" name="power" class="power" value="2">
             <label for="power">Power range:</label>

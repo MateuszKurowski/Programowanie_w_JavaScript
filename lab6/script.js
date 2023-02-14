@@ -2,6 +2,7 @@ import { Background } from './models/Background.js'
 import { Ball } from './models/Ball.js'
 
 let amountOfBalls = document.querySelector('.balls-amount')
+let powerTransfer = document.querySelector('.transfer-power')
 const startStopButton = document.querySelector('.start-stop-button')
 const resetButton = document.querySelector('.reset-button')
 let typeOfPower = document.getElementsByClassName('power-type')
@@ -94,20 +95,21 @@ const getDistance = (distanceI, distanceJ) => {
 }
 
 const transferPower = (firstBall, secondBall) => {
-	const power = 0.02
+	const powerToTransfer = powerTransfer / 100
+	console.log(powerToTransfer)
 	if (firstBall.radius > secondBall.radius) {
-		firstBall.transferPower(power, getWidth(), getHeight())
-		secondBall.transferPower(-power, getWidth(), getHeight())
+		firstBall.transferPower(powerToTransfer, getWidth(), getHeight())
+		secondBall.transferPower(-powerToTransfer, getWidth(), getHeight())
 	} else if (firstBall.radius < secondBall.radius) {
-		firstBall.transferPower(-power, getWidth(), getHeight())
-		secondBall.transferPower(power, getWidth(), getHeight())
+		firstBall.transferPower(-powerToTransfer, getWidth(), getHeight())
+		secondBall.transferPower(powerToTransfer, getWidth(), getHeight())
 	} else {
 		if (Math.round(Math.random()) == 0) {
-			firstBall.transferPower(power, getWidth(), getHeight())
-			secondBall.transferPower(-power, getWidth(), getHeight())
+			firstBall.transferPower(powerToTransfer, getWidth(), getHeight())
+			secondBall.transferPower(-powerToTransfer, getWidth(), getHeight())
 		} else {
-			firstBall.transferPower(-power, getWidth(), getHeight())
-			secondBall.transferPower(power, getWidth(), getHeight())
+			firstBall.transferPower(-powerToTransfer, getWidth(), getHeight())
+			secondBall.transferPower(powerToTransfer, getWidth(), getHeight())
 		}
 	}
 }
@@ -210,6 +212,7 @@ window.addEventListener('resize', () => {
 amountOfBalls.addEventListener('change', addOrDeleteBalls)
 powerOn.addEventListener('change', () => !powerOn)
 powerRange.addEventListener('change', () => (powerRange = document.querySelector('.power-range')))
+powerTransfer.addEventListener('change', () => (powerTransfer = document.querySelector('.transfer-power')))
 power.addEventListener('change', () => (power = document.querySelector('.power')))
 for (let index = 0; index < typeOfPower.length; index++) {
 	typeOfPower[index].addEventListener('change', () => {
@@ -232,6 +235,8 @@ canvasPlayground.addEventListener('click', e => {
 })
 
 canvasPlayground.addEventListener('mousemove', e => {
+	if (!powerOn.checked) return
+
 	window.cancelAnimationFrame(animationId)
 	const lastCurosrPosition = getCursorPosition(e)
 	for (let i = 0; i < balls.length; i++) {

@@ -10,28 +10,47 @@
 
 <body>
     <div id="menu">
-        <button class="start-stop-button">Stop</button>
-        <button class="reset-button">Reset</button>
+        <div class="main under-menu">
+            <button class="start-stop-button">Stop</button>
+            <button class="reset-button">Reset</button>
+            <div class="amount">
+                <label for="balls">Amount of balls:</label>
+                <input type="number" name="balls" class="balls-amount" value="1" min="0">
+            </div>
+            <div class="transfer">
+                <label for="transfer-power">Power of transfer:</label>
+                <input type="number" name="transfer-power" class="transfer-power" value="2" min="0">
+            </div>
+        </div>
 
-        <label for="balls">Amount of balls:</label>
-        <input type="number" name="balls" class="balls-amount" value="1" min="0">
+        <div class="powers under-menu">
+            <div class="switch-power">
+                <label for="transfer-power">Power on:</label>
+                <input type="checkbox" name="powerOn" class="power-on">
+            </div>
+            <div class="type">
+                <label for="type">Type of power:</label>
+                <input type="radio" id="pull" name="type" class="power-type" checked>Pull
+                <input type="radio" id="push" name="type" class="power-type">Push
+            </div>
+        </div>
 
-        <label for="power">Power:</label>
-        <input type="number" name="power" class="power" value="2">
-        <label for="power">Power range:</label>
-        <input type="number" name="power-range" class="power-range" value="50">
-        <label for="type">Type of power:</label>
-        <input type="radio" id="pull" name="type" class="power-type" checked>Pull
-        <input type="radio" id="push" name="type" class="power-type">Push
-        <input type="checkbox" name="powerOn" class="power-on">Power on
+        <div class="power-numbers under-menu">
+            <label for="power">Power:</label>
+            <input type="number" name="power" class="power" value="2">
+            <label for="power">Power range:</label>
+            <input type="number" name="power-range" class="power-range" value="50">
+        </div>
 
     </div>
-    <canvas id="canvas-background" class="canvas">
+    <div class="canvas-box">
+        <canvas id="canvas-background" class="canvas">
 
-    </canvas>
-    <canvas id="canvas-playground" class="canvas">
+        </canvas>
+        <canvas id="canvas-playground" class="canvas">
 
-    </canvas>
+        </canvas>
+    </div>
     <script type="module" src="./script.js"></script>
 </body>
 

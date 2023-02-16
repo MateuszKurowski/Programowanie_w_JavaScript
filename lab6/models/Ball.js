@@ -3,8 +3,8 @@ const minSpeed = 0.3
 
 export class Ball {
 	constructor(canvasWidth, canvasHeight, context, radius) {
-		this.boost = 0
-		this.onCursor = false
+		this.boostX = 0
+		this.boostY = 0
 		this.canvasHeight = canvasHeight
 		this.canvasWidth = canvasWidth
 		this.context = context
@@ -41,40 +41,15 @@ export class Ball {
 		this.yPosition = Math.floor(
 			Math.random() * (Math.floor(this.canvasHeight) - Math.ceil(this.radius * 2)) + Math.ceil(this.radius)
 		)
-		this.Sx = this.xPosition - this.radius
-		this.Sy = this.yPosition
 	}
 
 	draw(width, height) {
-		if (this.onCursor) {
-			this.xPosition = this.xPosition
-			this.yPosition = this.yPosition
-			this.context.beginPath()
-			if (this.radius < 0) {
-				return
-			}
-			this.context.arc(this.xPosition, this.yPosition, this.radius, 0, 2 * Math.PI)
-			this.context.fillStyle = this.color
-			this.context.fill()
-			this.context.stroke()
-			this.context.closePath()
-			return
-		} else if (this.boost) {
-			const boostY = this.vy >= 0 ? Math.abs(this.boost) : -Math.abs(this.boost)
-			const boostX = this.vx >= 0 ? Math.abs(this.boost) : -Math.abs(this.boost)
-			this.xPosition += boostY + this.vx
-			this.yPosition += boostX + this.vy
-			this.boost = 0
-			this.context.beginPath()
-			if (this.radius < 0) {
-				return
-			}
-			this.context.arc(this.xPosition, this.yPosition, this.radius, 0, 2 * Math.PI)
-			this.context.fillStyle = this.color
-			this.context.fill()
-			this.context.stroke()
-			this.context.closePath()
-			return
+		if (this.boostX || this.boostY) {
+			this.xPosition += this.boostX
+			this.yPosition += this.boostY
+
+			this.boostX = 0
+			this.boostY = 0
 		} else {
 			this.xPosition += this.vx
 			this.yPosition += this.vy

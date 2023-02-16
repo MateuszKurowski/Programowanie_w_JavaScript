@@ -161,7 +161,6 @@ const divedBall = ball => {
 		balls.slice(index, 1)
 		return
 	}
-	console.log(ball)
 	const secondBall = new Ball(getWidth(), getHeight(), playgroundCtx, ball.radius / 2)
 	ball.transferPower(-(ball.radius / 2), getWidth(), getHeight())
 	secondBall.yPosition = ball.yPosition
@@ -171,7 +170,6 @@ const divedBall = ball => {
 	secondBall.vx = ball.vx > 0 ? -Math.abs(secondBall.vx) : Math.abs(secondBall.vx)
 	secondBall.vy = ball.vy > 0 ? -Math.abs(secondBall.vy) : Math.abs(secondBall.vy)
 	balls.push(secondBall)
-	console.log(secondBall)
 }
 
 const getCursorPosition = event => {
@@ -181,27 +179,25 @@ const getCursorPosition = event => {
 }
 
 const pushBall = (ball, curosrPosition) => {
-	if (curosrPosition[0] == ball.xPosition && curosrPosition[1] == ball.yPosition) {
-		ball.onCursor = true
-		return
-	}
+	ball.boost = power.value
 	if (curosrPosition[0] > ball.xPosition) ball.vx = -Math.abs(ball.vx)
 	if (curosrPosition[0] < ball.xPosition) ball.vx = Math.abs(ball.vx)
 	if (curosrPosition[1] > ball.yPosition) ball.vy = -Math.abs(ball.vy)
 	if (curosrPosition[1] < ball.yPosition) ball.vy = Math.abs(ball.vy)
-	ball.boost = power.value
 }
 
 const pullBall = (ball, curosrPosition) => {
-	if (curosrPosition[0] == ball.xPosition && curosrPosition[1] == ball.yPosition) {
-		ball.onCursor = true
-		return
-	}
-	if (curosrPosition[0] > ball.xPosition) ball.vx = Math.abs(ball.vx)
-	else if (curosrPosition[0] < ball.xPosition) ball.vx = -Math.abs(ball.vx)
-	if (curosrPosition[1] > ball.yPosition) ball.vy = Math.abs(ball.vy)
-	else if (curosrPosition[1] < ball.yPosition) ball.vy = -Math.abs(ball.vy)
-	ball.boost = power.value
+	ball.boostX = curosrPosition[0] >= ball.xPosition ? parseInt(power.value) : parseInt(power.value) * -1
+	ball.boostY = linePattern(ball, curosrPosition)
+	// ball.vx = curosrPosition[0] >= 0 ? parseInt(power.value) : parseInt(power.value) * -1
+	// ball.vy = linePattern(ball, curosrPosition)
+}
+
+const linePattern = (ball, curosrPosition) => {
+	const a = (curosrPosition[1] - ball.yPosition) / (curosrPosition[0] - ball.xPosition)
+	const b = ball.yPosition - a * ball.xPosition
+
+	return ball.yPosition - (a * (ball.xPosition + ball.boostX) + b)
 }
 
 setCanvasDimensions()

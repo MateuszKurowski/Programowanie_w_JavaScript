@@ -3,11 +3,13 @@ const minSpeed = 0.3
 
 export class Ball {
 	constructor(canvasWidth, canvasHeight, context, radius) {
-		this.boostX = 0
-		this.boostY = 0
 		this.canvasHeight = canvasHeight
 		this.canvasWidth = canvasWidth
 		this.context = context
+		this.cursonInCanvas = false
+		this.cursorX = 0
+		this.cursorY = 0
+		this.powerType = 'pull'
 
 		this.minRadius = Math.min(canvasHeight, canvasWidth) * 0.1 * 0.2 //10%
 		this.maxRadius = 0
@@ -43,13 +45,52 @@ export class Ball {
 		)
 	}
 
-	draw(width, height) {
-		if (this.boostX || this.boostY) {
-			this.xPosition += this.boostX
-			this.yPosition += this.boostY
+	linePattern(previousX) {
+		let a = 0
+		if (this.cursorX - previousX === 0) {
+			a = 0
+		} else {
+			a = (this.cursorY - this.yPosition) / (this.cursorX - previousX)
+		}
+		const b = this.yPosition - a * previousX
+		console.log(`a=${a}, b=${b}, wynik= ${a * this.xPosition + b}`)
 
-			this.boostX = 0
-			this.boostY = 0
+		return a * this.xPosition + b
+	}
+
+	draw(width, height, power) {
+		if (this.cursonInCanvas) {
+			const boostX = this.speed / 4 + this.speed * (power / 100)
+
+			const tempX = this.xPosition
+			const tempY = this.yPosition
+
+			if (this.powerType == 'pull') {
+				if (Math.ceil(tempX) == this.cursorX || Math.floor(tempX) == this.cursorX) {
+					console.log(`rowne`)
+					if (this.yPosition < this.cursorY) this.yPosition = this.yPosition + boostX
+					else if (this.yPosition > this.cursorY) this.yPosition = this.yPosition - boostX
+				} else {
+					if (this.xPosition < this.cursorX) this.xPosition = this.xPosition + boostX
+					else if (this.xPosition > this.cursorX) this.xPosition = this.xPosition - boostX
+
+					const boostY = this.linePattern(tempX)
+					if (boostY) {
+						this.yPosition = boostY
+					}
+				}
+			} else if (this.powerType == 'push') {
+				if (this.xPosition > this.cursorX) this.xPosition = this.xPosition + boostX
+				else if (this.xPosition < this.cursorX) this.xPosition = this.xPosition - boostX
+
+				const boostY = this.linePattern(tempX)
+				if (boostY) {
+					this.yPosition = boostY
+				}
+			} else {
+				this.xPosition += this.vx
+				this.yPosition += this.vy
+			}
 		} else {
 			this.xPosition += this.vx
 			this.yPosition += this.vy
@@ -66,6 +107,7 @@ export class Ball {
 		this.context.fill()
 		this.context.stroke()
 		this.context.closePath()
+		this.cursonInCanvas = false
 	}
 
 	CheckIsBallInsideCanvas(width, height) {

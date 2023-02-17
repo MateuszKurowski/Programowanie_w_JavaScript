@@ -14,6 +14,7 @@ let powerOn = document.querySelector('.power-on')
 
 let isStarted = true
 let animationId
+let cursorInCanvas = false
 
 const canvasBackground = document.getElementById('canvas-background')
 const canvasPlayground = document.getElementById('canvas-playground')
@@ -128,7 +129,7 @@ function drawBalls() {
 	playgroundCtx.clearRect(0, 0, getWidth(), getHeight())
 	for (let i = 0; i < balls.length; i++) {
 		const ball = balls[i]
-		ball.draw(getWidth(), getHeight())
+		ball.draw(getWidth(), getHeight(), power.value)
 		if (ball.radius * 2 < 5) {
 			balls.splice(i, 1)
 			continue
@@ -179,25 +180,17 @@ const getCursorPosition = event => {
 }
 
 const pushBall = (ball, curosrPosition) => {
-	ball.boost = power.value
-	if (curosrPosition[0] > ball.xPosition) ball.vx = -Math.abs(ball.vx)
-	if (curosrPosition[0] < ball.xPosition) ball.vx = Math.abs(ball.vx)
-	if (curosrPosition[1] > ball.yPosition) ball.vy = -Math.abs(ball.vy)
-	if (curosrPosition[1] < ball.yPosition) ball.vy = Math.abs(ball.vy)
+	ball.cursorX = curosrPosition[0]
+	ball.cursorY = curosrPosition[1]
+	ball.cursonInCanvas = cursorInCanvas
+	ball.powerType = typeOfPoweChecked.id
 }
 
 const pullBall = (ball, curosrPosition) => {
-	ball.boostX = curosrPosition[0] >= ball.xPosition ? parseInt(power.value) : parseInt(power.value) * -1
-	ball.boostY = linePattern(ball, curosrPosition)
-	// ball.vx = curosrPosition[0] >= 0 ? parseInt(power.value) : parseInt(power.value) * -1
-	// ball.vy = linePattern(ball, curosrPosition)
-}
-
-const linePattern = (ball, curosrPosition) => {
-	const a = (curosrPosition[1] - ball.yPosition) / (curosrPosition[0] - ball.xPosition)
-	const b = ball.yPosition - a * ball.xPosition
-
-	return ball.yPosition - (a * (ball.xPosition + ball.boostX) + b)
+	ball.cursorX = curosrPosition[0]
+	ball.cursorY = curosrPosition[1]
+	ball.cursonInCanvas = cursorInCanvas
+	ball.powerType = typeOfPoweChecked.id
 }
 
 setCanvasDimensions()
@@ -261,4 +254,12 @@ canvasPlayground.addEventListener('mousemove', e => {
 		}
 	}
 	animationId = window.requestAnimationFrame(drawBalls)
+})
+
+canvasPlayground.addEventListener('mouseenter', e => {
+	cursorInCanvas = true
+})
+
+canvasPlayground.addEventListener('mouseleave', e => {
+	cursorInCanvas = false
 })

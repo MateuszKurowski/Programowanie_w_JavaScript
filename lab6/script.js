@@ -15,6 +15,7 @@ let powerOn = document.querySelector('.power-on')
 let isStarted = true
 let animationId
 let cursorInCanvas = false
+let cursorPosition
 
 const canvasBackground = document.getElementById('canvas-background')
 const canvasPlayground = document.getElementById('canvas-playground')
@@ -93,11 +94,11 @@ const getDistance = (distanceI, distanceJ) => {
 
 	const x = Math.pow(x2 - x1, 2)
 	const y = Math.pow(y2 - y1, 2)
-	return Math.sqrt(x + y)
+	return Math.abs(Math.sqrt(x + y))
 }
 
 const transferPower = (firstBall, secondBall) => {
-	const powerToTransfer = parseInt(powerTransfer.value) / 100
+	const powerToTransfer = parseInt(powerTransfer.value) / 1000
 	if (firstBall.radius > secondBall.radius) {
 		firstBall.transferPower(powerToTransfer, getWidth(), getHeight())
 		secondBall.transferPower(-powerToTransfer, getWidth(), getHeight())
@@ -137,6 +138,13 @@ function drawBalls() {
 		if (ball.radius * 2 >= Math.min(getHeight(), getWidth()) * 0.7) {
 			divedBall(ball)
 		}
+		if (powerOn.checked && cursorInCanvas) {
+			const distance = getDistance(ball.getPosition(), cursorPosition) - ball.radius
+			if (distance < powerRange.value) {
+				addPowerToBall(ball)
+			}
+		}
+
 		for (let j = i; j < balls.length; j++) {
 			if (i == j) {
 				continue
@@ -179,16 +187,9 @@ const getCursorPosition = event => {
 	return [x, y]
 }
 
-const pushBall = (ball, curosrPosition) => {
-	ball.cursorX = curosrPosition[0]
-	ball.cursorY = curosrPosition[1]
-	ball.cursonInCanvas = cursorInCanvas
-	ball.powerType = typeOfPoweChecked.id
-}
-
-const pullBall = (ball, curosrPosition) => {
-	ball.cursorX = curosrPosition[0]
-	ball.cursorY = curosrPosition[1]
+const addPowerToBall = ball => {
+	ball.cursorX = cursorPosition[0]
+	ball.cursorY = cursorPosition[1]
 	ball.cursonInCanvas = cursorInCanvas
 	ball.powerType = typeOfPoweChecked.id
 }
@@ -237,22 +238,22 @@ canvasPlayground.addEventListener('mousemove', e => {
 	if (!powerOn.checked) return
 
 	window.cancelAnimationFrame(animationId)
-	const lastCurosrPosition = getCursorPosition(e)
-	for (let i = 0; i < balls.length; i++) {
-		const ball = balls[i]
-		const distance = getDistance(lastCurosrPosition, ball.getPosition()) - ball.radius
+	cursorPosition = getCursorPosition(e)
+	// for (let i = 0; i < balls.length; i++) {
+	// 	const ball = balls[i]
+	// 	const distance = getDistance(lastCurosrPosition, ball.getPosition()) - ball.radius
 
-		if (distance > powerRange.value) continue
-		switch (typeOfPoweChecked.id) {
-			case 'pull':
-				pullBall(ball, lastCurosrPosition)
-				break
+	// 	if (distance > powerRange.value) continue
+	// 	switch (typeOfPoweChecked.id) {
+	// 		case 'pull':
+	// 			addPowerToBall(ball, lastCurosrPosition)
+	// 			break
 
-			case 'push':
-				pushBall(ball, lastCurosrPosition)
-				break
-		}
-	}
+	// 		case 'push':
+	// 			pushBall(ball, lastCurosrPosition)
+	// 			break
+	// 	}
+	// }
 	animationId = window.requestAnimationFrame(drawBalls)
 })
 
@@ -262,4 +263,15 @@ canvasPlayground.addEventListener('mouseenter', e => {
 
 canvasPlayground.addEventListener('mouseleave', e => {
 	cursorInCanvas = false
+})
+
+var before, now, fps
+before = Date.now()
+fps = 0
+requestAnimationFrame(function loop() {
+	now = Date.now()
+	fps = Math.round(1000 / (now - before))
+	before = now
+	requestAnimationFrame(loop)
+	console.log('fps', fps)
 })

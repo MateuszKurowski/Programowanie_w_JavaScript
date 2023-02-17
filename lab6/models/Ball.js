@@ -45,51 +45,74 @@ export class Ball {
 		)
 	}
 
-	linePattern(previousX) {
-		let a = 0
-		if (this.cursorX - previousX === 0) {
-			a = 0
-		} else {
-			a = (this.cursorY - this.yPosition) / (this.cursorX - previousX)
-		}
-		const b = this.yPosition - a * previousX
-		console.log(`a=${a}, b=${b}, wynik= ${a * this.xPosition + b}`)
-
-		return a * this.xPosition + b
-	}
-
-	draw(width, height, power) {
+	draw(width, height, powerText) {
 		if (this.cursonInCanvas) {
-			const boostX = this.speed / 4 + this.speed * (power / 100)
+			const power = parseInt(powerText) / 100
+			if (Math.round(this.xPosition) == this.cursorX && Math.round(this.yPosition) == this.cursorY) {
+				this.CheckIsBallInsideCanvas(width, height)
 
-			const tempX = this.xPosition
-			const tempY = this.yPosition
-
-			if (this.powerType == 'pull') {
-				if (Math.ceil(tempX) == this.cursorX || Math.floor(tempX) == this.cursorX) {
-					console.log(`rowne`)
-					if (this.yPosition < this.cursorY) this.yPosition = this.yPosition + boostX
-					else if (this.yPosition > this.cursorY) this.yPosition = this.yPosition - boostX
-				} else {
-					if (this.xPosition < this.cursorX) this.xPosition = this.xPosition + boostX
-					else if (this.xPosition > this.cursorX) this.xPosition = this.xPosition - boostX
-
-					const boostY = this.linePattern(tempX)
-					if (boostY) {
-						this.yPosition = boostY
-					}
+				this.context.beginPath()
+				if (this.radius < 0) {
+					return
 				}
-			} else if (this.powerType == 'push') {
-				if (this.xPosition > this.cursorX) this.xPosition = this.xPosition + boostX
-				else if (this.xPosition < this.cursorX) this.xPosition = this.xPosition - boostX
+				this.context.arc(this.xPosition, this.yPosition, this.radius, 0, 2 * Math.PI)
+				this.context.fillStyle = this.color
+				this.context.fill()
+				this.context.stroke()
+				this.context.closePath()
+				this.cursonInCanvas = false
+			}
 
-				const boostY = this.linePattern(tempX)
-				if (boostY) {
-					this.yPosition = boostY
+			let a = 0
+			if (this.cursorX - this.xPosition == 0) {
+				a = 0
+			} else {
+				a = (this.cursorY - this.yPosition) / (this.cursorX - this.xPosition)
+			}
+			const b = this.yPosition - a * this.xPosition
+
+			if (Math.abs(this.cursorX - (this.xPosition + power) < 3)) {
+				//Y
+				if (this.powerType == 'pull') {
+					if (this.yPosition < this.cursorY) {
+						if (this.yPosition + power >= this.cursorY) this.yPosition = this.cursorY
+						else this.yPosition = this.yPosition + power
+					} else if (this.yPosition > this.cursorY) {
+						if (this.yPosition - power <= this.cursorY) this.yPosition = this.cursorY
+						else this.yPosition = this.yPosition - power
+					}
+
+					if (a !== 0) this.xPosition = (this.yPosition - b) / a
+				} else if (this.powerType == 'push') {
+					if (this.yPosition > this.cursorY) this.yPosition = this.yPosition + power
+					else if (this.yPosition < this.cursorY) this.yPosition = this.yPosition - power
+
+					if (a !== 0) this.xPosition = (this.yPosition - b) / a
+				} else {
+					this.xPosition += this.vx
+					this.yPosition += this.vy
 				}
 			} else {
-				this.xPosition += this.vx
-				this.yPosition += this.vy
+				//X
+				if (this.powerType == 'pull') {
+					if (this.xPosition < this.cursorX) {
+						if (this.xPosition + power >= this.cursorX) this.xPosition = this.cursorX
+						else this.xPosition = this.xPosition + power
+					} else if (this.xPosition > this.cursorX) {
+						if (this.xPosition - power <= this.cursorX) this.xPosition = this.cursorX
+						else this.xPosition = this.xPosition - power
+					}
+
+					this.yPosition = a * this.xPosition + b
+				} else if (this.powerType == 'push') {
+					if (this.xPosition > this.cursorX) this.xPosition = this.xPosition + power
+					else if (this.xPosition < this.cursorX) this.xPosition = this.xPosition - power
+
+					this.yPosition = a * this.xPosition + b
+				} else {
+					this.xPosition += this.vx
+					this.yPosition += this.vy
+				}
 			}
 		} else {
 			this.xPosition += this.vx
@@ -102,6 +125,7 @@ export class Ball {
 		if (this.radius < 0) {
 			return
 		}
+
 		this.context.arc(this.xPosition, this.yPosition, this.radius, 0, 2 * Math.PI)
 		this.context.fillStyle = this.color
 		this.context.fill()

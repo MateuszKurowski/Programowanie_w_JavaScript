@@ -239,21 +239,6 @@ canvasPlayground.addEventListener('mousemove', e => {
 
 	window.cancelAnimationFrame(animationId)
 	cursorPosition = getCursorPosition(e)
-	// for (let i = 0; i < balls.length; i++) {
-	// 	const ball = balls[i]
-	// 	const distance = getDistance(lastCurosrPosition, ball.getPosition()) - ball.radius
-
-	// 	if (distance > powerRange.value) continue
-	// 	switch (typeOfPoweChecked.id) {
-	// 		case 'pull':
-	// 			addPowerToBall(ball, lastCurosrPosition)
-	// 			break
-
-	// 		case 'push':
-	// 			pushBall(ball, lastCurosrPosition)
-	// 			break
-	// 	}
-	// }
 	animationId = window.requestAnimationFrame(drawBalls)
 })
 
@@ -265,7 +250,7 @@ canvasPlayground.addEventListener('mouseleave', e => {
 	cursorInCanvas = false
 })
 
-var before, now, fps
+let before, now, fps
 before = Date.now()
 fps = 0
 requestAnimationFrame(function loop() {
